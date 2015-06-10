@@ -2690,7 +2690,17 @@ class ToolsNFePHP extends CommonNFePHP
                     //existem notas emitidas para esse cnpj
                     $nsu = $resNFe->getAttribute('NSU');
                     $chNFe = $resNFe->getElementsByTagName('chNFe')->item(0)->nodeValue;
-                    $CNPJ = $resNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+
+                    $CNPJ = null;
+                    $item = $resNFe->getElementsByTagName('CNPJ');
+                    if ($item->length > 0) {
+                        $CNPJ = $resNFe->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                    }
+                    $item = $resNFe->getElementsByTagName('CPF');
+                    if (!$CNPJ && $item->length > 0) {
+                        $CNPJ = $resNFe->getElementsByTagName('CPF')->item(0)->nodeValue;
+                    }
+
                     $xNome = $resNFe->getElementsByTagName('xNome')->item(0)->nodeValue;
                     $dEmi = $resNFe->getElementsByTagName('dEmi')->item(0)->nodeValue;
                     $vNF = $resNFe->getElementsByTagName('vNF')->item(0)->nodeValue;
@@ -2715,7 +2725,17 @@ class ToolsNFePHP extends CommonNFePHP
                     //existem notas canceladas para esse cnpj
                     $nsu = $resCanc->getAttribute('NSU');
                     $chNFe = $resCanc->getElementsByTagName('chNFe')->item(0)->nodeValue;
-                    $CNPJ = $resCanc->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+
+                    $CNPJ = null;
+                    $item = $resCanc->getElementsByTagName('CNPJ');
+                    if ($item->length > 0) {
+                        $CNPJ = $resCanc->getElementsByTagName('CNPJ')->item(0)->nodeValue;
+                    }
+                    $item = $resCanc->getElementsByTagName('CPF');
+                    if (!$CNPJ && $item->length > 0) {
+                        $CNPJ = $resCanc->getElementsByTagName('CPF')->item(0)->nodeValue;
+                    }
+
                     $xNome = $resCanc->getElementsByTagName('xNome')->item(0)->nodeValue;
                     $dEmi = $resCanc->getElementsByTagName('dEmi')->item(0)->nodeValue;
                     $vNF = $resCanc->getElementsByTagName('vNF')->item(0)->nodeValue;
