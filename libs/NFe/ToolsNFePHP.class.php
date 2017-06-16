@@ -2437,6 +2437,7 @@ class ToolsNFePHP extends CommonNFePHP
         $tpAmb = '2',
         $ultNSU = 0,
         $numNSU = 0,
+        $chNFe = 0,
         &$resp = array(),
         $descompactar = false
     ) {
@@ -2467,17 +2468,24 @@ class ToolsNFePHP extends CommonNFePHP
                 $metodo,
                 $versao
             );
-            $ultNSU = str_pad($ultNSU, 15, '0', STR_PAD_LEFT);
-            $tagNSU = "<distNSU><ultNSU>$ultNSU</ultNSU></distNSU>";
+            $tagNSU = '';
+            $tagChNFe = '';
             if ($numNSU != 0) {
                 $numNSU = str_pad($numNSU, 15, '0', STR_PAD_LEFT);
                 $tagNSU = "<consNSU><NSU>$numNSU</NSU></consNSU>";
+            } elseif ($chNFe != 0) {
+                $chNFe = str_pad($chNFe, 44, '0', STR_PAD_LEFT);
+//                $tagNSU = "<consNSU><NSU>$numNSU</NSU></consNSU>";
+                $tagChNFe = "<consChNFe><chNFe>$chNFe</chNFe></consChNFe>";
+            } else {
+                $ultNSU = str_pad($ultNSU, 15, '0', STR_PAD_LEFT);
+                $tagNSU = "<distNSU><ultNSU>$ultNSU</ultNSU></distNSU>";
             }
             //monta a consulta
             $cons = "<distDFeInt xmlns=\"$this->URLPortal\" versao=\"$versao\">"
                     . "<tpAmb>$tpAmb</tpAmb>"
                     . "<cUFAutor>$this->cUF</cUFAutor>"
-                    . "<CNPJ>$this->cnpj</CNPJ>$tagNSU</distDFeInt>";
+                    . "<CNPJ>$this->cnpj</CNPJ>$tagNSU$tagChNFe</distDFeInt>";
             //montagem dos dados da mensagem SOAP
             $dados = "<nfeDistDFeInteresse xmlns=\"$namespace\">"
                     . "<nfeDadosMsg xmlns=\"$namespace\">$cons</nfeDadosMsg>"
@@ -5295,7 +5303,6 @@ class ToolsNFePHP extends CommonNFePHP
         &$metodo,
         &$versao
     ) {
-        $cUF = $this->cUFlist[$siglaUF];
         //verifica se alguma contingência está habilitada,
         //neste caso precisa recarregar os webservices
         if ($this->enableSVCAN) {
@@ -5309,6 +5316,11 @@ class ToolsNFePHP extends CommonNFePHP
                 $aURL = $this->aURL;
             }
         }
+        
+        if ($siglaUF !== $this->siglaUF)
+            $siglaUF = $this->siglaUF;
+        $cUF = $this->cUFlist[$siglaUF];
+        
         //recuperação da versão
         $versao = $aURL[$servico]['version'];
         //recuperação da url do serviço
